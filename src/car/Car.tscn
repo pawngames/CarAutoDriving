@@ -1,0 +1,139 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://src/car/RigidBody.gd" type="Script" id=1]
+[ext_resource path="res://src/car/MeshInstance.gd" type="Script" id=2]
+[ext_resource path="res://src/car/VelRef.gd" type="Script" id=3]
+[ext_resource path="res://src/car/NavRef.gd" type="Script" id=4]
+[ext_resource path="res://src/car/Camera.gd" type="Script" id=5]
+
+[sub_resource type="CubeMesh" id=1]
+size = Vector3( 1, 0.5, 2 )
+
+[sub_resource type="CylinderMesh" id=2]
+height = 0.1
+
+[sub_resource type="SpatialMaterial" id=3]
+flags_transparent = true
+albedo_color = Color( 1, 1, 1, 0.490196 )
+
+[sub_resource type="CylinderMesh" id=4]
+top_radius = 0.3
+bottom_radius = 0.3
+height = 0.3
+
+[sub_resource type="PhysicsMaterial" id=5]
+rough = true
+absorbent = true
+
+[sub_resource type="SphereShape" id=6]
+
+[sub_resource type="CubeMesh" id=7]
+size = Vector3( 0.2, 0.2, 0.5 )
+
+[sub_resource type="SpatialMaterial" id=8]
+albedo_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="PrismMesh" id=9]
+size = Vector3( 0.6, 0.417, 0.2 )
+
+[sub_resource type="SpatialMaterial" id=10]
+albedo_color = Color( 1, 0, 0, 1 )
+
+[node name="Car" type="Spatial"]
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.9932, 0.116419, 0, -0.116419, 0.9932, 0, 2.6, 5 )
+script = ExtResource( 5 )
+
+[node name="CarBody" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0 )
+mesh = SubResource( 1 )
+material/0 = null
+script = ExtResource( 2 )
+
+[node name="RayCast" type="RayCast" parent="CarBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.664, 0 )
+enabled = true
+cast_to = Vector3( 0, -1.5, 0 )
+
+[node name="RayCastLeft" type="RayCast" parent="CarBody"]
+transform = Transform( 0.707107, 0.707107, -3.09086e-08, 0, -4.37114e-08, -1, -0.707107, 0.707107, -3.09086e-08, 0, 0, -1 )
+enabled = true
+cast_to = Vector3( 0, -2.2, 0 )
+
+[node name="RayCastFront" type="RayCast" parent="CarBody"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -1 )
+enabled = true
+cast_to = Vector3( 0, -2.2, 0 )
+
+[node name="RayCastRight" type="RayCast" parent="CarBody"]
+transform = Transform( 0.707107, -0.707107, 3.09086e-08, 0, -4.37114e-08, -1, 0.707107, 0.707107, -3.09086e-08, 0, 0, -1 )
+enabled = true
+cast_to = Vector3( 0, -2.2, 0 )
+
+[node name="CameraPivot" type="Spatial" parent="CarBody"]
+
+[node name="CameraRef" type="Spatial" parent="CarBody/CameraPivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 5 )
+
+[node name="CameraLookRef" type="Spatial" parent="CarBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.41392, 0 )
+
+[node name="NAV_DEBUG" type="MeshInstance" parent="CarBody"]
+visible = false
+mesh = SubResource( 2 )
+material/0 = SubResource( 3 )
+
+[node name="MeshInstance" type="MeshInstance" parent="CarBody"]
+transform = Transform( -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -0.6, -0.349956, -0.6 )
+mesh = SubResource( 4 )
+material/0 = null
+
+[node name="MeshInstance2" type="MeshInstance" parent="CarBody"]
+transform = Transform( -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.6, -0.349956, -0.6 )
+mesh = SubResource( 4 )
+material/0 = null
+
+[node name="MeshInstance3" type="MeshInstance" parent="CarBody"]
+transform = Transform( -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -0.6, -0.349956, 0.569707 )
+mesh = SubResource( 4 )
+material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="CarBody"]
+transform = Transform( -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.6, -0.349956, 0.569707 )
+mesh = SubResource( 4 )
+material/0 = null
+
+[node name="RigidBody" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.987231, 0 )
+input_ray_pickable = false
+mass = 100.0
+physics_material_override = SubResource( 5 )
+gravity_scale = 3.0
+continuous_cd = true
+contacts_reported = 1
+contact_monitor = true
+linear_damp = 0.35
+angular_damp = 0.6
+script = ExtResource( 1 )
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody"]
+shape = SubResource( 6 )
+
+[node name="NavMeshes" type="Spatial" parent="."]
+
+[node name="VelRef" type="Spatial" parent="."]
+script = ExtResource( 3 )
+
+[node name="NavRef" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.06407, 0 )
+script = ExtResource( 4 )
+
+[node name="MeshInstance" type="MeshInstance" parent="NavRef"]
+mesh = SubResource( 7 )
+material/0 = SubResource( 8 )
+
+[node name="MeshInstance" type="MeshInstance" parent="NavRef/MeshInstance"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.4 )
+mesh = SubResource( 9 )
+material/0 = SubResource( 10 )
